@@ -1,0 +1,99 @@
+body{
+    margin: 0;
+    padding: 0;
+   
+}
+.content{
+    height: 100vh;
+    
+}
+/*Navbar*/
+.nav{
+    top: 0;
+    border-color: black;
+    justify-content: space-between;
+    height: 5rem;
+    border-width: 2px;
+    box-shadow: 0rem 1rem rgb(50, 50, 175);
+    width: 100%;
+    
+    
+}
+.img_title{
+    height: 4.6rem;
+    width:20rem;
+    padding: 0.5rem 0 0rem 0.5rem;
+}
+
+#ic_no{
+    margin-left: 4rem;
+    
+    font-size: 1.3rem;
+    padding-top: 1.85rem;
+}
+#ic_on{
+    padding-top: 1.85rem; 
+    padding-right: 2rem;
+    font-size: 1.3rem;
+    justify-content: baseline;
+}
+
+#ic_on:hover{
+    font-size: 1.5rem;
+    
+}
+#ic_no:hover{
+    font-size: 1.5rem;
+    
+}
+/*Container_one*/
+.container_one{
+    height: 15rem;
+    margin-top: 2.5rem;
+    justify-items: center;
+    display: flex;
+    box-shadow: 0 1px grey;
+}
+
+.search_bar{
+    margin-left: 35rem;
+    width: 30rem;
+    height: 2.5rem;
+    border-radius: 0.6rem;
+}
+
+
+
+.container_one p{
+    font-size: 20px;
+    margin-left: 39rem;
+}
+.container_one a{
+    text-decoration: none;
+}
+
+/*container_two*/
+
+.container_two{
+    margin-top: 1rem;
+}
+
+.container_two p{
+    margin-left: 45rem;
+    font-size: 1.5rem;
+}
+.container_two a{
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+.container_two a:hover{
+    box-shadow: 0 2px rgb(50, 50, 175) ;
+    font-size: 1.6rem;
+}
+
+.badge{
+    background-color: rgb(50, 50, 175);
+}
+

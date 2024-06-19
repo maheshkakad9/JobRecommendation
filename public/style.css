@@ -1,0 +1,116 @@
+body{
+    margin: 0;
+    padding:0;
+    position: relative;
+}
+/*Nav-bar*/
+.nav{
+    position: top;
+    height: 4rem;
+    justify-content: space-between;
+    background-color: #031249;
+    position: static;
+    padding-top: 1rem;
+    box-shadow: 0 4px rgb(197, 190, 190);
+}
+.nav a{
+    text-decoration: none;
+    color:white;
+}
+/*Main-content*/
+/*first-block*/
+
+
+.first-block{
+    background: url(./assets/logo.jobmatch.png);
+    background-size: cover;
+    height: 400px;
+    width: 80%;
+    justify-content: space-around;
+    margin-top: 3rem;
+    position: relative;
+    margin-left: 9rem;
+    margin-right: 5rem;
+}
+
+/*Container_one*/
+.container_one{
+    margin-left: 5rem;
+    margin-right: 5rem;
+    margin-top: 1rem;
+}
+
+.card_one{
+    height: 350px;
+    width: 640px;
+    border: none;
+    box-shadow: 0 0.4rem #031249;
+    padding-left: 2rem;
+}
+.card-body-one{
+    justify-content: center;
+    align-content: center;
+    display:inline-grid;
+}
+
+.card-body-one img{
+    height: 320px;
+    width: 300px;
+    padding-top: 0 1rem 0 1rem;
+    border-radius: 1rem;
+    
+    
+}
+
+#slide{
+    height:350px;
+    width: 650px;
+    
+}
+.badge{
+    background-color: black;
+}
+
+/*container_two*/
+.card{
+    height: 350px;
+    width: 300px;
+    border: none;
+    box-shadow: 0 0.4rem #031249;
+}
+
+.container_two{
+    margin-left: 5rem;
+    margin-right: 5rem;
+    margin-top: 1rem;
+}
+
+.card-body-two{
+    justify-content: center;
+    align-content: center;
+    display:inline-grid;
+    border-radius: 0.5rem;
+}
+
+.card-body-two img{
+    height: 200px;
+    width: 300px;
+    border-radius: 0.5rem;
+}
+
+/*Footer*/
+.footer{
+    justify-content: space-around;
+    background-color: #031249;
+    height: 5rem;
+    width: 100%;
+    bottom: 0;
+    display: flex;
+    margin-top: 2rem;
+}
+.search-bar{
+    width:20rem;
+    margin-top: 1rem;
+    border-radius: 0.3rem;
+    height: 3rem;
+}

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character set and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title of the page -->
+    <title>Job Search</title>
+    <!-- Link to Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Custom CSS for Add resume button -->
+    <style>
+        .add-resume-btn {
+            background-color: #28a745; /* Green color */
+            color: #fff; /* White text color */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-resume-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        .pdfwork, .afterupload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .pdfwork * {
+            margin-top: 5px;
+        }
+
+        .afterupload {
+            display: none;
+        }
+
+        .another {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <!-- Brand name -->
+            <a class="navbar-brand" href="#">JOB MATCH</a>
+            <!-- Navbar toggler for collapsed state -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Row for aligning elements -->
+                <div class="row align-items-center">
+                    <!-- Column for Add resume button -->
+                    <div class="col-md-auto">
+                        <!-- Add resume button -->
+                        <button class="btn add-resume-btn mb-2 mb-md-0">Add resume</button>
+                        <input type="file" class="selectpdf" style="display: none;">
+                    </div>
+                    <!-- Column for search form -->
+                    <div class="col-md">
+                        <!-- Search form -->
+                        <form class="d-flex" role="search">
+                            <!-- Search input -->
+                            <input id="searchinput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <!-- Search button -->
+                            <button class="btn btn-outline-success" type="submit" id="searchbtn">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Container for job cards -->
+    <div class="container mt-3" id="jobCardsContainer">
+    </div>
+
+    <!-- Container for loading circle -->
+    <div id="loadingCircle" class="text-center mt-3" style="display: none;">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- JavaScript code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js" integrity="sha512-ml/QKfG3+Yes6TwOzQb7aCNtJF4PUyha6R3w8pSTo/VJSywl7ZreYvvtUso7fKevpsI+pYVVwnu82YO0q3V6eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get elements from the DOM
+            const searchbtn = document.getElementById("searchbtn");
+            const searchinput = document.getElementById("searchinput");
+            const jobCardsContainer = document.getElementById("jobCardsContainer");
+            const loadingCircle = document.getElementById("loadingCircle");
+            const addResumeBtn = document.querySelector('.add-resume-btn');
+            const pdfinput = document.querySelector(".selectpdf");
+
+            // Function to show the loading circle
+            const showLoading = () => {
+                loadingCircle.style.display = "block";
+            };
+
+            // Function to hide the loading circle
+            const hideLoading = () => {
+                loadingCircle.style.display = "none";
+            };
+
+            // Function to fetch jobs based on search query
+            const jobs = (searchQuery) => {
+                // Options for the fetch request (method and headers)
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        'X-RapidAPI-Key': '08d9366199msh89f4ddb5d590b56p10237fjsn413d72ce563a', // Replace with your API key
+                        'X-RapidAPI-Host': 'jsearch.p.rapidapi.com', // Replace with your API host
+                    }
+                };
+                // Fetch jobs from the API based on the search query
+                return fetch(`https://jsearch.p.rapidapi.com/search?query=${encodeURIComponent(searchQuery)}&page=1&num_pages=1`, options)
+                    // Parse response as JSON
+                    .then(response => response.json())
+                    // Process the response
+                    .then((response) => {
+                        console.log(response);
+                        // Check if response status is OK
+                        if (response.status === 'OK') {
+                            // Iterate over job data retrieved from the response
+                            response.data.forEach(jobData => {
+                                // Extract job details from job data
+                                const jobTitle = jobData.job_title;
+                                const jobDescription = jobData.job_description;
+                                const applyLink = jobData.job_apply_link;
+                                const country = jobData.job_country;
+                                const state = jobData.job_state;
+                                // Create a new job card element
+                                const card = document.createElement('div');
+                                card.classList.add('card', 'mb-3');
+                                card.innerHTML = `
+                                    <div class="card-body">
+                                        <h5 class="card-title">${jobTitle}</h5>
+                                        <p class="card-text">Location: ${country}, ${state}</p>
+                                        <p class="job-description">${jobDescription.slice(0, 100)}</p>
+                                        <p class="full-description" style="display: none;">${jobDescription}</p>
+                                        <button class="btn btn-primary read-more me-2">Read more</button>
+                                        ${applyLink ? `<a href="${applyLink}" class="btn btn-danger">Apply</a>` : '<button class="btn btn-danger apply-button">Apply</button>'}
+                                    </div>`;
+                                // Append the job card to the container
+                                jobCardsContainer.appendChild(card);
+                            });
+
+                            // Add event listeners to "Read more" buttons
+                            const readMoreButtons = document.querySelectorAll('.read-more');
+                            readMoreButtons.forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const cardBody = this.parentElement;
+                                    const fullDescription = cardBody.querySelector('.full-description');
+                                    const jobDescription = cardBody.querySelector('.job-description');
+                                    if (fullDescription.style.display === 'none') {
+                                        fullDescription.style.display = 'block';
+                                        jobDescription.style.display = 'none';
+                                        this.textContent = 'Read less';
+                                    } else {
+                                        fullDescription.style.display = 'none';
+                                        jobDescription.style.display = 'block';
+                                        this.textContent = 'Read more';
+                                    }
+                                });
+                            });
+
+                            // Add event listeners to "Apply" buttons
+                            const applyButtons = document.querySelectorAll('.apply-button');
+                            applyButtons.forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const cardBody = this.parentElement;
+                                    alert("Currently unable to redirect you");
+                                });
+                            });
+                        } else {
+                            console.error("Error fetching job data:", response.error);
+                        }
+                    })
+                    // Catch any errors that occur during the fetch request
+                    .catch(error => console.error(error));
+            };
+
+            // Add event listener to the search button
+            searchbtn.addEventListener("click", (e) => {
+                e.preventDefault(); // Prevent default form submission
+                const query = searchinput.value; // Get the search query entered by the user
+                jobCardsContainer.innerHTML = ''; // Clear previous job cards
+
+                // Show the loading circle
+                showLoading();
+
+                // Fetch jobs based on the search query
+                jobs(query)
+                    .then(() => {
+                        // Hide the loading circle when jobs are loaded
+                        hideLoading();
+                    });
+            });
+
+            // Add event listener to the resume upload button
+            addResumeBtn.addEventListener('click', () => {
+                pdfinput.click(); // Trigger click event on file input
+            });
+
+            pdfinput.addEventListener('change', () => {
+                const file = pdfinput.files[0];
+                if (file != undefined && file.type == "application/pdf") {
+                    const fr = new FileReader();
+                    fr.readAsDataURL(file);
+                    fr.onload = () => {
+                        const res = fr.result;
+                        setTimeout(() => {
+                            showLoading(); // Show loading circle after a short delay
+                        }, 100); // Add a delay of 100 milliseconds
+                        extractText(res)
+                            .then(() => {
+                                alert("PDF uploaded successfully!");
+                                hideLoading(); // Hide loading circle after processing
+                            })
+                            .catch(err => {
+                                alert(err.message);
+                                hideLoading(); // Hide loading circle if an error occurs
+                            });
+                    };
+                } else {
+                    alert("Select a valid PDF file");
+                }
+            });
+
+            let alltext = [];
+
+            async function extractText(url) {
+                try {
+                    const pdf = await pdfjsLib.getDocument(url).promise;
+                    const pages = pdf.numPages;
+                    for (let i = 1; i <= pages; i++) {
+                        const page = await pdf.getPage(i);
+                        const txt = await page.getTextContent();
+                        const text = txt.items.map((s) => s.str).join("");
+                        alltext.push(text);
+                    }
+                    afterProcess();
+                } catch (err) {
+                    throw err;
+                }
+            }
+
+            function afterProcess() {
+                searchKeywords(["css", "javascript", "HTML","python","java","cpp","manager","front-end","back-end","AI","node.js","MERN","react.js","express.js","djnago"]); // Pass an array of keywords here
+            }
+
+            function searchKeywords(keywords) {
+                if (!keywords || !Array.isArray(keywords)) return;
+                keywords.forEach(keyword => {
+                    if (!keyword) return;
+                    const regex = new RegExp(keyword, 'gi');
+                    let occurrences = 0;
+                    alltext.forEach((text, index) => {
+                        text.match(regex)?.forEach(() => occurrences++);
+                    });
+                    console.log(`Found "${keyword}" ${occurrences} times.`);
+                    if (occurrences > 0) {
+                        // Fetch jobs based on the keyword
+                        jobs(keyword);
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
